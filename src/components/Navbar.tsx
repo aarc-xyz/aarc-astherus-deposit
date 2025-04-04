@@ -20,8 +20,8 @@ export const Navbar = ({ handleDisconnect }: { handleDisconnect: () => void }) =
                         className="w-6 h-6"
                     />
                     <img
-                        className="h-12 w-auto"
-                        src="/apex-name-logo.svg"
+                        className="h-7 w-auto"
+                        src="/astherus-name-logo.svg"
                         alt="Apex Omni Logo"
                     />
                 </div>

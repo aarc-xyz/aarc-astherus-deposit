@@ -5,10 +5,10 @@ import {
   TransactionErrorData,
   SourceConnectorName,
 } from "@aarc-xyz/fundkit-web-sdk";
-import { APEX_OMNI_ADDRESS, SupportedChainId } from "../constants";
+import { ASTHERUS_ADDRESS, SupportedChainId } from "../constants";
 
 export const aarcConfig: FKConfig = {
-  appName: "Apex Omni x Aarc",
+  appName: "Aster x Aarc",
   module: {
     exchange: {
       enabled: true,
@@ -26,13 +26,13 @@ export const aarcConfig: FKConfig = {
   },
   destination: {
     contract: {
-      contractAddress: APEX_OMNI_ADDRESS[SupportedChainId.ARBITRUM],
-      contractName: "Apex Omni Deposit",
+      contractAddress: ASTHERUS_ADDRESS[SupportedChainId.BINANCE_SMART_CHAIN],
+      contractName: "AsterDeposit",
       contractPayload: "0x", // This will be updated dynamically
       contractGasLimit: "300000", // Standard gas limit, can be adjusted if needed
     },
-    walletAddress: APEX_OMNI_ADDRESS[SupportedChainId.ARBITRUM],
-    chainId: 42161, // Base chain ID
+    walletAddress: ASTHERUS_ADDRESS[SupportedChainId.BINANCE_SMART_CHAIN],
+    chainId: 56, // BSC chain ID
   },
   appearance: {
     roundness: 42,

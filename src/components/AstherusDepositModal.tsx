@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useAccount, useDisconnect } from 'wagmi';
 import { ethers } from 'ethers';
 import { AarcFundKitModal } from '@aarc-xyz/fundkit-web-sdk';
-import { APEX_OMNI_ADDRESS, SupportedChainId, TOKENS } from '../constants';
+import { ASTHERUS_ADDRESS, SupportedChainId, TOKENS } from '../constants';
 import { Navbar } from './Navbar';
 import StyledConnectButton from './StyledConnectButton';
 import { TokenConfig } from '../types';
 
-export const ApexOmniDepositModal = ({ aarcModal }: { aarcModal: AarcFundKitModal }) => {
+export const AstherusDepositModal = ({ aarcModal }: { aarcModal: AarcFundKitModal }) => {
     const [amount, setAmount] = useState('20');
     const [isProcessing, setIsProcessing] = useState(false);
     const [selectedToken, setSelectedToken] = useState<TokenConfig>(TOKENS[0]);
@@ -28,57 +28,46 @@ export const ApexOmniDepositModal = ({ aarcModal }: { aarcModal: AarcFundKitModa
         try {
             setIsProcessing(true);
 
-            const apexOmniInterface = new ethers.Interface([
-                "function depositERC20(address _token, uint104 _amount, bytes32 _zkLinkAddress, uint8 _subAccountId, bool _mapping) external",
-                "function depositETH(bytes32 _zkLinkAddress, uint8 _subAccountId) external payable"
+            const astherusInterface = new ethers.Interface([
+                "function deposit(address _currency, uint256 _amount, uint256 _broker) external",
+                "function depositNative(uint256 _broker) external payable"
             ]);
 
             let contractPayload;
             let value = '0';
 
-            if (selectedToken.symbol === 'ETH') {
+            if (selectedToken.symbol === 'BNB') {
                 value = ethers.parseUnits(amount, selectedToken.decimals).toString();
-                contractPayload = apexOmniInterface.encodeFunctionData("depositETH", [
-                    `0x000000000000000000000000${address.slice(2)}`,
-                    0 // subAccountId
+                contractPayload = astherusInterface.encodeFunctionData("depositNative", [
+                    0 // broker
                 ]);
             } else {
                 const amountInWei = ethers.parseUnits(amount, selectedToken.decimals);
-                // Ensure amount fits in uint104 (2^104 - 1)
-                const maxUint104 = BigInt(2) ** BigInt(104) - BigInt(1);
-                if (BigInt(amountInWei.toString()) > maxUint104) {
-                    throw new Error("Amount too large");
-                }
-                
-                contractPayload = apexOmniInterface.encodeFunctionData("depositERC20", [
+                contractPayload = astherusInterface.encodeFunctionData("deposit", [
                     selectedToken.address,
                     amountInWei,
-                    `0x000000000000000000000000${address.slice(2)}`,
-                    0, // subAccountId
-                    false
+                    0 // broker
                 ]);
             }
 
             aarcModal.updateRequestedAmount(Number(amount));
             aarcModal.updateDestinationToken(selectedToken.address);
 
-            // For ETH deposits, we need to set the value
-            if (selectedToken.symbol === 'ETH') {
+            // For BNB deposits, we need to set the value
+            if (selectedToken.symbol === 'BNB') {
                 aarcModal.updateDestinationContract({
-                    contractAddress: APEX_OMNI_ADDRESS[SupportedChainId.ARBITRUM],
-                    contractName: "Apex Omni Deposit",
+                    contractAddress: ASTHERUS_ADDRESS[SupportedChainId.BINANCE_SMART_CHAIN],
                     contractGasLimit: "800000",
                     contractPayload: contractPayload,
-                    contractLogoURI: "https://omni.apex.exchange/favicon.ico?v=1.0.2",
+                    contractLogoURI: "https://static.asterdex.com/cloud-futures/static/images/aster/mini_logo.svg",
                     contractAmount: value
                 });
             } else {
                 aarcModal.updateDestinationContract({
-                    contractAddress: APEX_OMNI_ADDRESS[SupportedChainId.ARBITRUM],
-                    contractName: "Apex Omni Deposit",
+                    contractAddress: ASTHERUS_ADDRESS[SupportedChainId.BINANCE_SMART_CHAIN],
                     contractGasLimit: "800000",
                     contractPayload: contractPayload,
-                    contractLogoURI: "https://omni.apex.exchange/favicon.ico?v=1.0.2"
+                    contractLogoURI: "https://static.asterdex.com/cloud-futures/static/images/aster/mini_logo.svg"
                 });
             }
 
@@ -188,12 +177,12 @@ export const ApexOmniDepositModal = ({ aarcModal }: { aarcModal: AarcFundKitModa
                             <p className="font-bold mb-1">After your deposit is completed:</p>
                             <p>Check your deposit balance on{' '}
                                 <a 
-                                    href="https://omni.apex.exchange/trade/BTCUSDT" 
+                                    href="https://www.asterdex.com/en/portfolio/history" 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="text-[#A5E547] hover:underline"
                                 >
-                                    Apex Omni Exchange
+                                    Aster
                                 </a>
                             </p>
                         </div>
@@ -224,4 +213,4 @@ export const ApexOmniDepositModal = ({ aarcModal }: { aarcModal: AarcFundKitModa
     );
 };
 
-export default ApexOmniDepositModal;
+export default AstherusDepositModal;
