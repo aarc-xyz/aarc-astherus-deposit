@@ -27,9 +27,10 @@ export const aarcConfig: FKConfig = {
   destination: {
     contract: {
       contractAddress: ASTHERUS_ADDRESS[SupportedChainId.BINANCE_SMART_CHAIN],
-      contractName: "AsterDeposit",
+      contractName: "Aster Deposit",
       contractPayload: "0x", // This will be updated dynamically
       contractGasLimit: "300000", // Standard gas limit, can be adjusted if needed
+      contractLogoURI: "https://static.asterdex.com/cloud-futures/static/images/aster/mini_logo.svg",
     },
     walletAddress: ASTHERUS_ADDRESS[SupportedChainId.BINANCE_SMART_CHAIN],
     chainId: 56, // BSC chain ID

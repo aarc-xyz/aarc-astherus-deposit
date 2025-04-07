@@ -39,14 +39,14 @@ export const AstherusDepositModal = ({ aarcModal }: { aarcModal: AarcFundKitModa
             if (selectedToken.symbol === 'BNB') {
                 value = ethers.parseUnits(amount, selectedToken.decimals).toString();
                 contractPayload = astherusInterface.encodeFunctionData("depositNative", [
-                    0 // broker
+                    1 // broker
                 ]);
             } else {
                 const amountInWei = ethers.parseUnits(amount, selectedToken.decimals);
                 contractPayload = astherusInterface.encodeFunctionData("deposit", [
                     selectedToken.address,
                     amountInWei,
-                    0 // broker
+                    1 // broker
                 ]);
             }
 
@@ -59,7 +59,6 @@ export const AstherusDepositModal = ({ aarcModal }: { aarcModal: AarcFundKitModa
                     contractAddress: ASTHERUS_ADDRESS[SupportedChainId.BINANCE_SMART_CHAIN],
                     contractGasLimit: "800000",
                     contractPayload: contractPayload,
-                    contractLogoURI: "https://static.asterdex.com/cloud-futures/static/images/aster/mini_logo.svg",
                     contractAmount: value
                 });
             } else {
@@ -67,7 +66,6 @@ export const AstherusDepositModal = ({ aarcModal }: { aarcModal: AarcFundKitModa
                     contractAddress: ASTHERUS_ADDRESS[SupportedChainId.BINANCE_SMART_CHAIN],
                     contractGasLimit: "800000",
                     contractPayload: contractPayload,
-                    contractLogoURI: "https://static.asterdex.com/cloud-futures/static/images/aster/mini_logo.svg"
                 });
             }
 
